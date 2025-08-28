@@ -1,6 +1,6 @@
-import Logout from "./logout"
-import Search from "./search"
-import User from "./user"
+import Logout from "./Logout.jsx"
+import Search from "./Search.jsx"
+import User from "./User.jsx"
 
 
 function Left() {
