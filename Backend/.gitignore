@@ -1,0 +1,57 @@
+# ----------------------------
+# Node.js
+# ----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# ----------------------------
+# Logs
+# ----------------------------
+logs
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----------------------------
+# Environment files
+# ----------------------------
+.env
+.env.local
+.env.*.local
+
+# ----------------------------
+# Build output
+# ----------------------------
+dist/
+build/
+.cache/
+.next/
+out/
+coverage/
+
+# ----------------------------
+# OS-specific
+# ----------------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------------
+# Project-specific
+# ----------------------------
+# Frontend build
+Frontend/dist/
+
+# Backend build (if you ever transpile)
+Backend/dist/
+
+# VSCode/IDE
+.vscode/
+.idea/
