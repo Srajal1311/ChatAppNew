@@ -11,3 +11,21 @@
   -ms-overflow-style: none; /* IE 10+ */
   scrollbar-width: none; /* Firefox */
 }
+/* Make the outer page full height and dark, and stop page scroll */
+:root, html, body, #root {
+  height: 100%;
+}
+
+body {
+  /* if you prefer Tailwind, you can @apply these instead */
+  background-color: #000;   /* same as bg-black */
+  color: #d1d5db;           /* same as text-gray-300 */
+  margin: 0;                /* just in case */
+  overflow: hidden;         /* prevent the tiny page scroll “bounce” */
+  overscroll-behavior: none;
+}
+
+/* Optional: if you’ve ever had horizontal overflow flicker */
+html, body {
+  overflow-x: hidden;
+}

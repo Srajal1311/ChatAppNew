@@ -1,131 +1,176 @@
-import React from 'react';
+import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useAuth } from '../context/AuthProvider';
-import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useAuth } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+
 export default function Signup() {
-  const [authUser,setAuthUser]=useAuth();
+  const [authUser, setAuthUser] = useAuth();
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-// watch the password  and confirm password fields
+
   const password = watch("password", "");
 
-  const validatePasswordMatch = (value) => {
-    return value === password || "Passwords do not match";
-  };
+  const validatePasswordMatch = (value) =>
+    value === password || "Passwords do not match";
 
-  const onSubmit =async (data) => {
-    const userInfo={
-        fullname: data.username,
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword
+  const onSubmit = async (data) => {
+    const userInfo = {
+      fullname: data.username,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
 
-    }
-    //console.log(userInfo);
-    await axios
-    .post("/api/user/signup", userInfo)
-    .then((response) => {
-        
-        if(response.data){
+    try {
+      const res = await axios.post("/api/user/signup", userInfo);
+      if (res?.data) {
         toast.success("Signup successful");
-        }
-        localStorage.setItem("ChatApp",JSON.stringify(response.data));
-        setAuthUser(response.data);
-    })
-    .catch((error) => {
-        if(error.response){
-            toast.error("Error: "+error.response.data.error)
-        }
-
-    })
+        localStorage.setItem("ChatApp", JSON.stringify(res.data));
+        setAuthUser(res.data);
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error("Error: " + error.response.data.error);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
   };
 
   return (
-    <div className='flex h-screen items-center justify-center'>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className='border border-white px-6 py-2 rounded-md space-y-3 w-96'
-      >
-        <h1 className='text-2xl text-center'>
-          Chat <span className='text-green-500 font-semibold '>App</span>
-        </h1>
-        <h2 className='text-xl font-semibold'>Signup</h2>
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-950 to-black flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/70 backdrop-blur-xl shadow-2xl">
+          <div className="px-6 py-7 sm:px-8 sm:py-9">
+            <h1 className="text-3xl font-bold text-center text-zinc-100">
+              Chat <span className="text-emerald-400">App</span>
+            </h1>
+            <p className="mt-1 text-center text-zinc-400">Create your account</p>
 
-        {/* Username */}
-        <input
-          type="text"
-          placeholder="Username"
-          {...register("username", { required: true, minLength: 3 })}
-          className="w-full border p-2 rounded"
-        />
-        {errors.username && (
-          <p className="text-red-500 font-semibold">Username is required</p>
-        )}
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+              {/* Username */}
+              <div>
+                <label className="block text-sm font-medium text-zinc-300">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  className={`w-full rounded-lg border bg-zinc-900/60 text-zinc-100 placeholder-zinc-500 px-3 py-2.5 outline-none transition
+                    border-zinc-700 focus:border-emerald-500/60 focus:ring-2 focus:ring-emerald-500/20
+                    ${errors.username ? "border-red-500/70 focus:ring-red-500/20" : ""}`}
+                  {...register("username", { required: true, minLength: 3 })}
+                />
+                {errors.username && (
+                  <p className="mt-1 text-xs text-red-400">
+                    Username must be at least 3 characters
+                  </p>
+                )}
+              </div>
 
-        {/* Email */}
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email", { required: true })}
-          className="w-full border p-2 rounded"
-        />
-        {errors.email && (
-          <p className="text-red-500 font-semibold">Email is required</p>
-        )}
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-zinc-300">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  className={`w-full rounded-lg border bg-zinc-900/60 text-zinc-100 placeholder-zinc-500 px-3 py-2.5 outline-none transition
+                    border-zinc-700 focus:border-emerald-500/60 focus:ring-2 focus:ring-emerald-500/20
+                    ${errors.email ? "border-red-500/70 focus:ring-red-500/20" : ""}`}
+                  {...register("email", { required: true })}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs text-red-400">Email is required</p>
+                )}
+              </div>
 
-        {/* Password */}
-        <input
-          type="password"
-          placeholder="Password"
-          {...register("password", {
-            required: true,
-            minLength: 8,
-            pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-          })}
-          className="w-full border p-2 rounded"
-        />
-        {errors.password && (
-          <p className="text-red-500 font-semibold">
-            Password must be at least 8 characters and contain 1 uppercase, 1 lowercase, and 1 number
-          </p>
-        )}
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-zinc-300">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className={`w-full rounded-lg border bg-zinc-900/60 text-zinc-100 placeholder-zinc-500 px-3 py-2.5 outline-none transition
+                    border-zinc-700 focus:border-emerald-500/60 focus:ring-2 focus:ring-emerald-500/20
+                    ${errors.password ? "border-red-500/70 focus:ring-red-500/20" : ""}`}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: { value: 8, message: "At least 8 characters" },
+                    pattern: {
+                      value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+                      message: "Include uppercase, lowercase, and a number",
+                    },
+                  })}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
 
-        {/* Confirm Password */}
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          {...register("confirmPassword", {
-            required: "Confirm your password",
-            validate: validatePasswordMatch,
-          })}
-          className="w-full border p-2 rounded"
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 font-semibold">
-            {errors.confirmPassword.message}
-          </p>
-        )}
-        {/* Text & Button */}
-        <div className='flex justify-between items-center mt-4'>
-          <p>
-            Have an account?{" "}
-            <Link to="/login" className='text-blue-500 font-semibold underline cursor-pointer'>
-              Login
-            </Link>
-          </p>
-          <input
-            type="submit"
-            value="Signup"
-            className='bg-green-600 text-white rounded-md px-2 py-1 cursor-pointer hover:bg-green-500 font-semibold duration-200'
-          />
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-zinc-300">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Re-enter password"
+                  className={`w-full rounded-lg border bg-zinc-900/60 text-zinc-100 placeholder-zinc-500 px-3 py-2.5 outline-none transition
+                    border-zinc-700 focus:border-emerald-500/60 focus:ring-2 focus:ring-emerald-500/20
+                    ${errors.confirmPassword ? "border-red-500/70 focus:ring-red-500/20" : ""}`}
+                  {...register("confirmPassword", {
+                    required: "Confirm your password",
+                    validate: validatePasswordMatch,
+                  })}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-between pt-2">
+                <p className="text-sm text-zinc-400">
+                  Have an account?
+                  <Link
+                    to="/login"
+                    className="ml-1 text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+                  >
+                    Login
+                  </Link>
+                </p>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center rounded-lg bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-600
+                             text-white font-medium px-4 py-2 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? "Signing up..." : "Signup"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
+        <p className="text-center text-xs text-zinc-500 mt-3">
+          By signing up, you agree to our Terms and Privacy Policy.
+        </p>
+      </div>
     </div>
   );
 }

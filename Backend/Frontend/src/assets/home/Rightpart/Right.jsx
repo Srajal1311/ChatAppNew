@@ -37,7 +37,7 @@ const NoChatSelected=()=>{
   return(
     <>
     <div className="flex h-screen items-center justify-center">
-      <h1 className="text-center">Welcome <span>{authUser.user.fullname}.0</span><br/>
+      <h1 className="text-center">Welcome <span>{authUser.user.fullname}</span><br/>
       No chat selected, please start conversation by selecting anyone to your contacts.
       </h1>
     </div>
